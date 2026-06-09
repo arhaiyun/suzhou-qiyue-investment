@@ -1,0 +1,29 @@
+[
+  {
+    "id": "idea-001",
+    "title": "建立项目机会雷达",
+    "description": "把行业观察、政策变化、客户痛点和个人判断统一记录，形成可筛选的机会池。",
+    "source": "内部观察",
+    "status": "待评估",
+    "validationQuestion": "哪些机会具备明确客户、支付意愿和启樾可控资源？",
+    "nextStep": "设计一页机会评分表。"
+  },
+  {
+    "id": "idea-002",
+    "title": "关系维护节奏表",
+    "description": "为关键员工、合作伙伴、机构关系设置维护频率和下一次触达目标。",
+    "source": "经营复盘",
+    "status": "可转运营",
+    "validationQuestion": "哪些关系需要长期维护，哪些只是一次性沟通？",
+    "nextStep": "建立关系分类和触达记录模板。"
+  },
+  {
+    "id": "idea-003",
+    "title": "商业计划版本库",
+    "description": "同一项目按内部版、成熟版、对外版区分表达，减少临时改材料的混乱。",
+    "source": "BP 管理",
+    "status": "可转项目",
+    "validationQuestion": "不同受众最关心的 5 个问题分别是什么？",
+    "nextStep": "先为公司总 BP 建立三种版本结构。"
+  }
+]

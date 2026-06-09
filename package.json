@@ -1,0 +1,12 @@
+{
+  "name": "suzhou-qiyue-investment",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "苏州启樾投资有限公司经营操作系统",
+  "scripts": {
+    "serve": "node scripts/serve.mjs --open",
+    "serve:only": "node scripts/serve.mjs",
+    "test": "node --test tests/site-contract.test.mjs"
+  }
+}
