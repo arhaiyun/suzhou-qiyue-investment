@@ -5,13 +5,15 @@ const dataSources = {
   ideas: "data/ideas.json",
   relationships: "data/relationships.json",
   tasks: "data/tasks.json",
-  decisions: "data/decisions.json"
+  decisions: "data/decisions.json",
+  documents: "data/documents.json"
 };
 
-const views = ["Dashboard", "创业项目", "商业计划", "想法池", "运营节奏", "关系维护", "会议决策"];
+const views = ["Dashboard", "创业项目", "商业计划", "项目文档", "想法池", "运营节奏", "关系维护", "会议决策"];
 
 const state = {
   activeView: "Dashboard",
+  activeDocumentId: null,
   data: null
 };
 
@@ -25,6 +27,130 @@ const escapeHtml = (value) =>
     .replaceAll('"', "&quot;");
 
 const badge = (label, tone = "neutral") => `<span class="badge badge-${tone}">${escapeHtml(label)}</span>`;
+
+const renderInlineMarkdown = (value) =>
+  escapeHtml(value)
+    .replaceAll(/`([^`]+)`/g, "<code>$1</code>")
+    .replaceAll(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+
+const isTableSeparator = (line) => /^\|?\s*:?-{3,}:?\s*(\|\s*:?-{3,}:?\s*)+\|?$/.test(line);
+
+const splitTableRow = (line) =>
+  line
+    .replace(/^\|/, "")
+    .replace(/\|$/, "")
+    .split("|")
+    .map((cell) => cell.trim());
+
+const renderMarkdown = (markdown) => {
+  const lines = markdown.replaceAll("\r\n", "\n").split("\n");
+  const html = [];
+  let index = 0;
+
+  const isBlockStart = (line, nextLine = "") =>
+    /^#{1,4}\s+/.test(line) ||
+    /^-\s+/.test(line) ||
+    /^\d+\.\s+/.test(line) ||
+    /^>\s?/.test(line) ||
+    (line.trim().startsWith("|") && isTableSeparator(nextLine));
+
+  while (index < lines.length) {
+    const line = lines[index].trim();
+    const nextLine = lines[index + 1]?.trim() || "";
+
+    if (!line) {
+      index += 1;
+      continue;
+    }
+
+    if (line.startsWith("#### ")) {
+      html.push(`<h4>${renderInlineMarkdown(line.slice(5))}</h4>`);
+      index += 1;
+      continue;
+    }
+
+    if (line.startsWith("### ")) {
+      html.push(`<h3>${renderInlineMarkdown(line.slice(4))}</h3>`);
+      index += 1;
+      continue;
+    }
+
+    if (line.startsWith("## ")) {
+      html.push(`<h2>${renderInlineMarkdown(line.slice(3))}</h2>`);
+      index += 1;
+      continue;
+    }
+
+    if (line.startsWith("# ")) {
+      html.push(`<h1>${renderInlineMarkdown(line.slice(2))}</h1>`);
+      index += 1;
+      continue;
+    }
+
+    if (line.startsWith(">")) {
+      const quote = [];
+      while (index < lines.length && lines[index].trim().startsWith(">")) {
+        quote.push(lines[index].trim().replace(/^>\s?/, ""));
+        index += 1;
+      }
+      html.push(`<blockquote>${quote.map(renderInlineMarkdown).join("<br>")}</blockquote>`);
+      continue;
+    }
+
+    if (line.startsWith("|") && isTableSeparator(nextLine)) {
+      const header = splitTableRow(line);
+      index += 2;
+      const rows = [];
+      while (index < lines.length && lines[index].trim().startsWith("|")) {
+        rows.push(splitTableRow(lines[index].trim()));
+        index += 1;
+      }
+      html.push(`
+        <div class="doc-table-wrap">
+          <table>
+            <thead><tr>${header.map((cell) => `<th>${renderInlineMarkdown(cell)}</th>`).join("")}</tr></thead>
+            <tbody>
+              ${rows.map((row) => `<tr>${row.map((cell) => `<td>${renderInlineMarkdown(cell)}</td>`).join("")}</tr>`).join("")}
+            </tbody>
+          </table>
+        </div>
+      `);
+      continue;
+    }
+
+    if (line.startsWith("- ")) {
+      const items = [];
+      while (index < lines.length && lines[index].trim().startsWith("- ")) {
+        items.push(lines[index].trim().slice(2));
+        index += 1;
+      }
+      html.push(`<ul>${items.map((item) => `<li>${renderInlineMarkdown(item)}</li>`).join("")}</ul>`);
+      continue;
+    }
+
+    if (/^\d+\.\s+/.test(line)) {
+      const items = [];
+      while (index < lines.length && /^\d+\.\s+/.test(lines[index].trim())) {
+        items.push(lines[index].trim().replace(/^\d+\.\s+/, ""));
+        index += 1;
+      }
+      html.push(`<ol>${items.map((item) => `<li>${renderInlineMarkdown(item)}</li>`).join("")}</ol>`);
+      continue;
+    }
+
+    const paragraph = [];
+    while (index < lines.length) {
+      const current = lines[index].trim();
+      const following = lines[index + 1]?.trim() || "";
+      if (!current || isBlockStart(current, following)) break;
+      paragraph.push(current);
+      index += 1;
+    }
+    html.push(`<p>${renderInlineMarkdown(paragraph.join(" "))}</p>`);
+  }
+
+  return html.join("");
+};
 
 const renderList = (items) => `
   <ul class="clean-list">
@@ -178,6 +304,36 @@ const renderPlans = ({ plans }) => `
   </section>
 `;
 
+const renderDocuments = ({ documents }) => {
+  const activeDocument =
+    documents.find((document) => document.id === state.activeDocumentId) ||
+    documents[0];
+
+  return `
+    ${sectionHeader("Documents", "项目文档", "把 Markdown 项目材料转成适合浏览、复盘和对外沟通前检查的阅读版。")}
+    <section class="documents-view">
+      <aside class="document-list">
+        ${documents.map((document) => `
+          <button class="${activeDocument.id === document.id ? "active" : ""}" data-document-id="${escapeHtml(document.id)}">
+            <span>${escapeHtml(document.category)}</span>
+            <strong>${escapeHtml(document.title)}</strong>
+            <p>${escapeHtml(document.summary)}</p>
+          </button>
+        `).join("")}
+      </aside>
+      <article class="document-reader">
+        <div class="document-meta">
+          ${badge(activeDocument.category, "active")}
+          <span>${escapeHtml(activeDocument.path)}</span>
+        </div>
+        <div class="markdown-body">
+          ${renderMarkdown(activeDocument.content || "")}
+        </div>
+      </article>
+    </section>
+  `;
+};
+
 const renderIdeas = ({ ideas }) => `
   ${sectionHeader("Inbox", "想法池", "先记录，再筛选。只有通过客户、场景、收益和可执行性检查的想法才进入项目。")}
   <section class="card-grid">
@@ -283,6 +439,7 @@ const renderMain = () => {
     Dashboard: renderDashboard,
     创业项目: renderVentures,
     商业计划: renderPlans,
+    项目文档: renderDocuments,
     想法池: renderIdeas,
     运营节奏: renderOperations,
     关系维护: renderRelationships,
@@ -328,6 +485,13 @@ const renderShell = () => {
       renderShell();
     });
   });
+
+  app.querySelectorAll("[data-document-id]").forEach((button) => {
+    button.addEventListener("click", () => {
+      state.activeDocumentId = button.dataset.documentId;
+      renderShell();
+    });
+  });
 };
 
 const loadData = async () => {
@@ -339,6 +503,14 @@ const loadData = async () => {
     })
   );
   state.data = Object.fromEntries(entries);
+  state.data.documents = await Promise.all(
+    state.data.documents.map(async (document) => {
+      const response = await fetch(document.path);
+      if (!response.ok) throw new Error(`无法读取 ${document.path}`);
+      return { ...document, content: await response.text() };
+    })
+  );
+  state.activeDocumentId = state.data.documents[0]?.id || null;
   renderShell();
 };
 

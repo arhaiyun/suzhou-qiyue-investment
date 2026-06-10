@@ -1,0 +1,23 @@
+[
+  {
+    "id": "doc-venture-smart-pendant",
+    "title": "项目立项档案",
+    "category": "创业项目",
+    "summary": "说明实体智能毛绒挂件与云端数字生命体的项目定位、机会、方案假设、商业模式和下一步。",
+    "path": "02-ventures/smart-emotional-companion-pendant.md"
+  },
+  {
+    "id": "doc-review-smart-pendant",
+    "title": "专家解答",
+    "category": "运营分析",
+    "summary": "从产品定义、形象创意、技术可行性、Demo SOP、商业模式、用户验证和风险角度给出专家判断。",
+    "path": "04-operations/smart-emotional-companion-pendant-expert-review.md"
+  },
+  {
+    "id": "doc-plan-smart-pendant",
+    "title": "项目计划书",
+    "category": "商业计划",
+    "summary": "将项目拆解为目标、范围、核心体验闭环、工作分解、里程碑、指标、风险和近期行动。",
+    "path": "03-business-plans/smart-emotional-companion-pendant-project-plan.md"
+  }
+]

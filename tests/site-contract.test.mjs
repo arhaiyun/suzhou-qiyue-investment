@@ -24,6 +24,7 @@ test("project includes the expected operating-system files", async () => {
     "data/relationships.json",
     "data/tasks.json",
     "data/decisions.json",
+    "data/documents.json",
     "templates/venture-brief.md",
     "templates/business-plan.md",
     "templates/meeting-notes.md",
@@ -43,6 +44,7 @@ test("business data describes Qiyue as a company operating system", async () => 
   const plans = await readJson("data/business-plans.json");
   const relationships = await readJson("data/relationships.json");
   const tasks = await readJson("data/tasks.json");
+  const documents = await readJson("data/documents.json");
 
   assert.equal(company.name, "苏州启樾投资有限公司");
   assert.ok(company.positioning.includes("经营操作系统"));
@@ -57,6 +59,9 @@ test("business data describes Qiyue as a company operating system", async () => 
   assert.ok(relationships.every((item) => item.category && item.followUpRhythm));
   assert.ok(Array.isArray(tasks));
   assert.ok(tasks.every((task) => task.owner && task.status));
+  assert.ok(Array.isArray(documents));
+  assert.ok(documents.length >= 3);
+  assert.ok(documents.every((document) => document.title && document.path && document.category));
 });
 
 test("frontend is data-driven and exposes the operating views", async () => {
@@ -69,12 +74,13 @@ test("frontend is data-driven and exposes the operating views", async () => {
   assert.match(app, /data\/company\.json/);
   assert.match(app, /data\/ventures\.json/);
   assert.match(app, /data\/relationships\.json/);
+  assert.match(app, /data\/documents\.json/);
+  assert.match(app, /renderMarkdown/);
 
-  for (const view of ["Dashboard", "创业项目", "商业计划", "想法池", "运营节奏", "关系维护", "会议决策"]) {
+  for (const view of ["Dashboard", "创业项目", "商业计划", "想法池", "运营节奏", "关系维护", "会议决策", "项目文档"]) {
     assert.match(app, new RegExp(view));
   }
 
   assert.match(css, /--ink:/);
   assert.match(css, /grid-template-columns/);
 });
-
