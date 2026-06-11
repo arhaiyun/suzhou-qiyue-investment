@@ -1,0 +1,29 @@
+[
+  {
+    "id": "feishu-original-input",
+    "title": "01 原始输入清单",
+    "path": "docs/source-materials/project-workflow-input-original.md",
+    "nodeToken": "SIJcw5M5zi3PO6kvdfTcIVOWnZd",
+    "documentId": "SfgddYxTHotU5uxkzAVc1Gvsnzd",
+    "url": "https://my.feishu.cn/wiki/SIJcw5M5zi3PO6kvdfTcIVOWnZd",
+    "syncedAt": "2026-06-11T01:34:23.257Z"
+  },
+  {
+    "id": "feishu-expert-answers",
+    "title": "02 项目问题专家解答",
+    "path": "04-operations/smart-emotional-companion-pendant-expert-review.md",
+    "nodeToken": "JT8ZwSNudiUnhBkVN4wcCPRqnTe",
+    "documentId": "LgqCdUmEaoaROnxcnXzcyCtrnXe",
+    "url": "https://my.feishu.cn/wiki/JT8ZwSNudiUnhBkVN4wcCPRqnTe",
+    "syncedAt": "2026-06-11T01:34:25.663Z"
+  },
+  {
+    "id": "feishu-professional-business-plan",
+    "title": "03 专业商业计划书",
+    "path": "03-business-plans/smart-emotional-companion-pendant-professional-business-plan.md",
+    "nodeToken": "GFLdwsSK7ieC4jkPVABch1ftnqc",
+    "documentId": "VKKXdiQMOodjWtxuuBPczBeUn5c",
+    "url": "https://my.feishu.cn/wiki/GFLdwsSK7ieC4jkPVABch1ftnqc",
+    "syncedAt": "2026-06-11T01:34:28.883Z"
+  }
+]

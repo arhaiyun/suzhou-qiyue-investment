@@ -1,0 +1,23 @@
+[
+  {
+    "id": "doc-venture-smart-pendant",
+    "title": "项目立项档案",
+    "path": "02-ventures/smart-emotional-companion-pendant.md",
+    "documentId": "JJtzdboIIoWWegx9FcAcNHZVnpc",
+    "url": "https://my.feishu.cn/wiki/FoHtw2kvii9WYak9A5ScWfuknrg",
+    "sourceType": "wiki",
+    "syncedAt": "2026-06-11T01:19:02.970Z"
+  },
+  {
+    "id": "doc-review-smart-pendant",
+    "title": "专家解答",
+    "path": "04-operations/smart-emotional-companion-pendant-expert-review.md",
+    "skipped": "FEISHU_TARGET_DOCUMENT_URL 仅用于测试写入第一份文档"
+  },
+  {
+    "id": "doc-plan-smart-pendant",
+    "title": "项目计划书",
+    "path": "03-business-plans/smart-emotional-companion-pendant-project-plan.md",
+    "skipped": "FEISHU_TARGET_DOCUMENT_URL 仅用于测试写入第一份文档"
+  }
+]
